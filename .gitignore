@@ -1,3 +1,4 @@
+.DS_Store
 .env
 /log
 
@@ -23,6 +24,9 @@
 /wp-app/wp-trackback.php
 /wp-app/xmlrpc.php
 /wp-app/license.txt
+/wp-app/wp-content/index.php
+/wp-app/wp-content/plugins/index.php
+/wp-app/wp-content/themes/index.php
 
 #wp-plugin
 /wp-app/wp-content/plugins/akismet

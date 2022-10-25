@@ -3,7 +3,6 @@ services:
 
   db:
     image: mariadb:10.7.3
-    container_name: db
     volumes:
       - ./wp-data:/var/lib/mysql
     environment:
@@ -14,10 +13,15 @@ services:
       - wordpress-network
 
   wordpress:
-    image: wordpress:5.9.3-php7.4-fpm-alpine
+    build:
+      context: ./etc/wordpress/
+      dockerfile: dockerfile
     volumes:
-      - ./config/php/php.conf:/usr/local/etc/php/conf.d/conf.ini
       - ./wp-app:/var/www/html
+      - ./etc/php/php.conf:/usr/local/etc/php/conf.d/conf.ini
+      - ./etc/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./log/xdebug/xdebug.log:/tmp/xdebug/xdebug.log
+      - ./log/xdebug/profile:/tmp/docker-xdebug
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -35,11 +39,11 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./etc/nginx:/etc/nginx/conf.d
       - ./wp-app:/var/www/html
       - ./log/nginx:/var/log/nginx
     ports:
-      - 8080:80
+      - ${IP}:80:80
     links:
       - wordpress
     networks:
